@@ -24,4 +24,4 @@ dist_install_DATA = \
 	nmsbd.ttf \
 	army-digital.ttf \
 	lcd.ttf \
-	lsb.ttf \
+	lsb.ttf
