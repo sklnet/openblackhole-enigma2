@@ -5,7 +5,6 @@
 installdir = $(datadir)/fonts
 
 dist_install_DATA = \
-	dist_install_DATA = \
 	Army_Regular_L.ttf \
 	LiberationSans-BoldItalic.ttf \
 	tuxtxt.ttf \
