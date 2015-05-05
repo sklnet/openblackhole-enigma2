@@ -1,4 +1,4 @@
-SUBDIRS = border menu icons buttons spinner LCDIcons dvr epg infobar logos window
+SUBDIRS = menu icons buttons spinner LCDIcons
 
 installdir = $(pkgdatadir)/skin_default
 
