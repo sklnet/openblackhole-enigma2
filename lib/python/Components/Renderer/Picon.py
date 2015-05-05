@@ -12,7 +12,7 @@ lastPiconPath = None
 def initPiconPaths():
 	global searchPaths
 	searchPaths = []
-	for mp in ('/usr/share/enigma2/', '/'):
+	for mp in ('/usr/share/enigma2/', '/', "/media/usb"):
 		onMountpointAdded(mp)
 	for part in harddiskmanager.getMountedPartitions():
 		onMountpointAdded(part.mountpoint)
@@ -60,7 +60,7 @@ def findPicon(serviceName):
 				return pngname
 	return ""
 
-def getPiconName(serviceName):
+def getPiconName(serviceName, mode=1):
 	#remove the path and name fields, and replace ':' by '_'
 	sname = '_'.join(GetWithAlternative(serviceName).split(':', 10)[:10])
 	pngname = findPicon(sname)
@@ -78,6 +78,8 @@ def getPiconName(serviceName):
 			pngname = findPicon(name)
 			if not pngname and len(name) > 2 and name.endswith('hd'):
 				pngname = findPicon(name[:-2])
+	if not pngname and mode == 1:
+		pngname = "/usr/share/enigma2/skin_default/picon_default.png"
 	return pngname
 
 class Picon(Renderer):
@@ -119,7 +121,7 @@ class Picon(Renderer):
 		if self.instance:
 			pngname = ""
 			if what[0] != self.CHANGED_CLEAR:
-				pngname = getPiconName(self.source.text)
+				pngname = getPiconName(self.source.text, 2)
 			if not pngname: # no picon for service found
 				pngname = self.defaultpngname
 			if self.pngname != pngname:
