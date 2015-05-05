@@ -59,7 +59,8 @@ class DeliteSettings(Screen):
 			from Plugins.Extensions.DLNABrowser.plugin import DLNADeviceBrowser
 			self.session.open(DLNADeviceBrowser)
 		elif self.sel == 3:
-			self.session.open(BhMinidlna)
+			from Plugins.Extensions.DLNAServer.plugin import DLNAServer
+			self.session.open(DLNAServer)
 		elif self.sel == 4:
 			from Screens.BpFormat import Bp_UsbFormat
 			self.session.open(Bp_UsbFormat)
@@ -102,7 +103,7 @@ class DeliteSettings(Screen):
 		
 		mypixmap = mypath + "icons/infopanel_space.png"
 		png = LoadPixmap(mypixmap)
-		name = _("Devices Manager & Mountpoints")
+		name = _("Devices Manager")
 		idx = 0
 		res = (name, png, idx)
 		self.list.append(res)
