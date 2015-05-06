@@ -159,7 +159,7 @@ class DeliteBluePanel(Screen):
 		self.session.open(DeliteSettings)
 		
 	def keyGreen(self):
-		self.session.open(MessageBox, _("Sorry, function not available in Black Pole"), MessageBox.TYPE_INFO)
+		self.session.open(MessageBox, _("Sorry, function not available"), MessageBox.TYPE_INFO)
 		
 	def keyRed(self):
 		from Plugins.SystemPlugins.CrossEPG.crossepg_main import crossepg_main
@@ -171,7 +171,7 @@ class DeliteBluePanel(Screen):
 
 class startstopCam(Screen):
 	skin = """
-	<screen position="center,center" size="360,200" title="Black Pole" flags="wfNoBorder">
+	<screen position="center,center" size="360,200" title="Black Hole" flags="wfNoBorder">
 		<widget name="lab1" position="10,10" halign="center" size="340,180" zPosition="1" font="Regular;20" valign="center" transparent="1" />
 	</screen>"""
 	
@@ -198,7 +198,7 @@ class startstopCam(Screen):
 
 class BhsysInfo(Screen):
 	skin = """
-	<screen position="center,center" size="800,600" title="Black Pole Info" flags="wfNoBorder">
+	<screen position="center,center" size="800,600" title="Black Hole Info" flags="wfNoBorder">
 		<widget name="lab1" position="50,25" halign="left" size="700,550" zPosition="1" font="Regular;20" valign="top" transparent="1" />
 	</screen>"""
 	

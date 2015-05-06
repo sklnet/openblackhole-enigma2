@@ -19,7 +19,7 @@ from Plugins.SystemPlugins.NetworkBrowser.NetworkBrowser import NetworkBrowser
 
 class DeliteSettings(Screen):
 	skin = """
-	<screen position="160,110" size="390,360" title="Black Pole Extra Settings">
+	<screen position="160,110" size="390,360" title="Black Hole Extra Settings">
 		<widget source="list" render="Listbox" position="10,10" size="370,330" scrollbarMode="showOnDemand" >
 			<convert type="TemplatedMultiContent">
                 		{"template": [
@@ -56,41 +56,43 @@ class DeliteSettings(Screen):
 			from Screens.BpDevice import DeliteDevicesPanel
 			self.session.open(DeliteDevicesPanel)
 		elif self.sel == 1:
-			self.session.open(Setup, "userinterface")
+			self.session.open(Setup, "usage")
 		elif self.sel == 2:
+			self.session.open(Setup, "userinterface")
+		elif self.sel == 3:
 			from Plugins.SystemPlugins.OSDPositionSetup.plugin import OSDScreenPosition
 			self.session.open(OSDScreenPosition)
-		elif self.sel == 3:
+		elif self.sel == 4:
 			from Plugins.SystemPlugins.OSD3DSetup.plugin import OSD3DSetupScreen
 			self.session.open(OSD3DSetupScreen)
-		elif self.sel == 4:
+		elif self.sel == 5:
 			from Screens.BpFormat import Bp_UsbFormat
 			self.session.open(Bp_UsbFormat)
-		elif self.sel == 5:
+		elif self.sel == 6:
 			from Screens.BpDevice import BlackPoleSwap
 			self.session.open(BlackPoleSwap)
-		elif self.sel == 6:
-			self.session.open(DeliteInadyn)
 		elif self.sel == 7:
+			self.session.open(DeliteInadyn)
+		elif self.sel == 8:
 			from Plugins.Extensions.DLNABrowser.plugin import DLNADeviceBrowser
 			self.session.open(DLNADeviceBrowser)
-		elif self.sel == 8:
+		elif self.sel == 9:
 			from Plugins.Extensions.DLNAServer.plugin import DLNAServer
 			self.session.open(DLNAServer)
-		elif self.sel == 9:
-			self.session.open(DeliteOpenvpn)
 		elif self.sel == 10:
-			self.session.open(Setup, "epgsettings")
+			self.session.open(DeliteOpenvpn)
 		elif self.sel == 11:
-			self.session.open(Setup, "recording")
+			self.session.open(Setup, "epgsettings")
 		elif self.sel == 12:
+			self.session.open(Setup, "recording")
+		elif self.sel == 13:
 			from Screens.RecordPaths import RecordPathsSettings
 			self.session.open(RecordPathsSettings)
-		elif self.sel == 13:
-			self.session.open(Setup, "subtitlesetup")
 		elif self.sel == 14:
-			self.session.open(Setup, "autolanguagesetup")
+			self.session.open(Setup, "subtitlesetup")
 		elif self.sel == 15:
+			self.session.open(Setup, "autolanguagesetup")
+		elif self.sel == 16:
 			self.session.open(BhNetBrowser)
 		
 		else:
@@ -116,106 +118,113 @@ class DeliteSettings(Screen):
 		
 		mypixmap = mypath + "icons/infopanel_osd.png"
 		png = LoadPixmap(mypixmap)
-		name = _("Osd settings")
+		name = _("General settings")
 		idx = 1
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_osd.png"
 		png = LoadPixmap(mypixmap)
-		name = _("Osd Position setup")
+		name = _("Osd settings")
 		idx = 2
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_osd.png"
 		png = LoadPixmap(mypixmap)
-		name = _("Osd 3D setup")
+		name = _("Osd Position setup")
 		idx = 3
+		res = (name, png, idx)
+		self.list.append(res)
+		
+		mypixmap = mypath + "icons/infopanel_osd.png"
+		png = LoadPixmap(mypixmap)
+		name = _("Osd 3D setup")
+		idx = 4
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_space.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Usb Format Wizard")
-		idx = 4
+		idx = 5
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/swapsettings.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Swap File settings")
-		idx = 5
+		idx = 6
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/inadynsettings.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Inadyn")
-		idx = 6
-		res = (name, png, idx)
-		self.list.append(res)
-		
-		mypixmap = mypath + "icons/infopanel_samba.png"
-		png = LoadPixmap(mypixmap)
-		name = _("Dlna Client")
 		idx = 7
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_samba.png"
 		png = LoadPixmap(mypixmap)
-		name = _("Dlna Server")
+		name = _("Dlna Client")
 		idx = 8
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_samba.png"
 		png = LoadPixmap(mypixmap)
-		name = _("OpenVpn Panel")
+		name = _("Dlna Server")
 		idx = 9
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_samba.png"
 		png = LoadPixmap(mypixmap)
+		name = _("OpenVpn Panel")
+		idx = 10
+		res = (name, png, idx)
+		self.list.append(res)
+		
+		mypixmap = mypath + "icons/infopanel_samba.png"
+		png = LoadPixmap(mypixmap)
 		name = _("Internal Epg settings")
-		idx = 9
+		idx = 11
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_cron.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Record settings")
-		idx = 10
+		idx = 12
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/infopanel_space.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Recording paths")
-		idx = 11
+		idx = 13
 		res = (name, png, idx)
 		self.list.append(res)
 				
 		mypixmap = mypath + "icons/infopanel_kmod.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Subtitle settings")
-		idx = 12
+		idx = 14
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/inadynsettings.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Auto language settings")
-		idx = 13
+		idx = 15
 		res = (name, png, idx)
 		self.list.append(res)
 		
 		mypixmap = mypath + "icons/mountwizard.png"
 		png = LoadPixmap(mypixmap)
 		name = _("Network Browser & Mountpoints")
-		idx = 14
+		idx = 16
 		res = (name, png, idx)
 		self.list.append(res)
 		
@@ -284,7 +293,7 @@ class BhMinidlna(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		
-		mytext = _("Minidlna: UPnP media server Black Pole version.\nMinidlna is fully configured for your box and ready to work. Just enable it and play.\nMinidlna include little web interface.\n\nMinidlna webif url: http://ip_box:8200\nMinidlna config: /etc/minidlna.conf\nMinidlna home site: http://sourceforge.net/projects/minidlna/")
+		mytext = _("Minidlna: UPnP media server Black Hole version.\nMinidlna is fully configured for your box and ready to work. Just enable it and play.\nMinidlna include little web interface.\n\nMinidlna webif url: http://ip_box:8200\nMinidlna config: /etc/minidlna.conf\nMinidlna home site: http://sourceforge.net/projects/minidlna/")
 		self["lab1"] = Label(mytext)
 		self["lab2"] = Label(_("Current Status:"))
 		self["labstop"] = Label(_("Stopped"))

@@ -1,4 +1,4 @@
-# Black Pole usb format utility coded by meo.
+# Black Hole usb format utility coded by meo.
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
