@@ -24,6 +24,9 @@ class DeliteBluePanel(Screen):
 		self["Ilab2"] = Label()
 		self["Ilab3"] = Label()
 		self["Ilab4"] = Label()
+		self["key_red"] = Label(_("Epg Panel"))
+		self["key_yellow"] = Label(_("Sys Info"))
+		self["key_blue"] = Label(_("Extra Settings"))
 		self["activecam"] = Label()
 		self["Ecmtext"] = ScrollLabel()
 		
