@@ -65,7 +65,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 
 		self.activity = 0
 		self.activityTimer = eTimer()
-		self.activityTimer.callback.append(self.checkTraficLight)
+		self.activityTimer.callback.append(self.checkTraficLightBH)
 		self.activityTimer.callback.append(self.doActivityTimer)
 		self.activityTimer.start(100, True)
 
@@ -102,6 +102,13 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		else:
 			message += "\n" + _("Do you want to update your receiver?")
 			self.session.openWithCallback(self.startActualUpdate, MessageBox, message, default = default, picon = picon)
+
+	def checkTraficLightBH(self):
+
+		self.activityTimer.callback.remove(self.checkTraficLightBH)
+		self.activityTimer.start(100, False)
+		self.startActualUpdate(True)
+		
 
 	def showDisclaimer(self, justShow=False):
 		if config.usage.show_update_disclaimer.value or justShow:
@@ -194,7 +201,8 @@ class UpdatePlugin(Screen, ProtectedScreen):
 			elif self.ipkg.currentCommand == IpkgComponent.CMD_UPGRADE_LIST:
 				self.total_packages = len(self.ipkg.getFetchedList())
 				if self.total_packages:
-					latestImageTimestamp = self.getLatestImageTimestamp()
+#					latestImageTimestamp = self.getLatestImageTimestamp()
+					latestImageTimestamp = ""
 					if latestImageTimestamp:
 						message = _("Do you want to update your receiver to %s?") % self.getLatestImageTimestamp() + "\n"
 					else:
@@ -211,9 +219,9 @@ class UpdatePlugin(Screen, ProtectedScreen):
 					choices = []
 				if fileExists("/home/root/ipkgupgrade.log"):
 					choices.append((_("Show latest upgrade log"), "log"))
-				choices.append((_("Show latest commits on sourceforge"), "commits"))
-				if not config.usage.show_update_disclaimer.value:
-					choices.append((_("Show disclaimer"), "disclaimer"))
+#				choices.append((_("Show latest commits on sourceforge"), "commits"))
+#				if not config.usage.show_update_disclaimer.value:
+#					choices.append((_("Show disclaimer"), "disclaimer"))
 				choices.append((_("Cancel"), ""))
 				self.session.openWithCallback(self.startActualUpgrade, ChoiceBox, title=message, list=choices)
 			elif self.channellist_only > 0:
