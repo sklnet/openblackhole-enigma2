@@ -338,7 +338,8 @@ class Nab_downArea(Screen):
 			os_remove(downfile)
 		
 		if self.url == "feeds":
-			self.session.open(Nab_downFeedCat)
+			from Plugins.SystemPlugins.SoftwareManager.plugin import PluginManager
+			self.session.open(PluginManager, "/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager")
 		else:
 			self.session.openWithCallback(self.connectionDone, Nab_ConnectPop, self.url, downfile)
 			
@@ -350,124 +351,6 @@ class Nab_downArea(Screen):
 		else:
 			nobox = self.session.open(MessageBox, _("Sorry, Connection Failed."), MessageBox.TYPE_INFO)
 		
-
-class Nab_downFeedCat(Screen):
-	skin = """
-	<screen position="center,center" size="880,490" title="Black Hole Feeds Plugins">
-		<widget source="list" render="Listbox" position="10,10" size="860,470" zPosition="1" scrollbarMode="showOnDemand"  transparent="1">
-            	<convert type="TemplatedMultiContent">
-                {"template": [
-                MultiContentEntryText(pos = (4, 2), size = (840, 36), flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 0),
-                ],
-                "fonts": [gFont("Regular", 26)],
-                "itemHeight": 36
-                }
-            	</convert>
-             </widget>
-	</screen>"""
-	
-	def __init__(self, session):
-		Screen.__init__(self, session)
-		
-		self["list"] = ""
-		
-		self["actions"] = ActionMap(["WizardActions", "ColorActions"],
-		{
-			"ok": self.KeyOk,
-			"back": self.close
-
-		})
-		
-		mlist = [ ]
-		if fileExists("/usr/share/dict/pfeeds.en"):
-			f = open("/usr/share/dict/pfeeds.en",'r')
- 			for line in f.readlines():
-				if len(line) > 4:
-					parts = line.strip().split("|")
-					res = (parts[0], parts[1], parts[2])
-					mlist.append(res)
- 			f.close()
-		
-		self["list"] = List(mlist)
-
-
-	def KeyOk(self):
-		self.sel = self["list"].getCurrent()
-		if self.sel:
-			self.session.open(Nab_ShowFeedFile, self.sel[1], self.sel[2])
-
-class Nab_ShowFeedFile(Screen):
-	skin = """
-	<screen position="center,center" size="800,405" title="Black Hole E2 Package Details">
-		<widget name="infotext" position="20,15" size="760,315" font="Regular;24" />
-		<ePixmap pixmap="skin_default/buttons/green.png" position="173,365" size="140,40" alphatest="on" />
-		<widget name="key_green" position="173,365" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
-		<ePixmap pixmap="skin_default/buttons/yellow.png" position="486,365" size="140,40" alphatest="on" />
-		<widget name="key_yellow" position="486,365" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
-	</screen>"""
-	
-	def __init__(self, session, myidf, desc):
-		Screen.__init__(self, session)
-
-		self["key_green"] = Label(_("Install"))
-		self["key_yellow"] = Label(_("Cancel"))
-		self["infotext"] = ScrollLabel(desc)
-		self.fileN = myidf
-	
-		self["actions"] = ActionMap(["WizardActions", "ColorActions", "DirectionActions"],
-		{
-			"ok": self.KeyGreend,
-			"back": self.close,
-			"green": self.KeyGreend,
-			"yellow": self.close,
-			"up": self["infotext"].pageUp,
-			"down": self["infotext"].pageDown
-
-		})
-			
-	def KeyGreend(self):
-		message = _("Do you want to install the Addon:\n ") + self.fileN + _(" ?")
-		ybox = self.session.openWithCallback(self.installadd, MessageBox, message, MessageBox.TYPE_YESNO)
-		ybox.setTitle(_("Install"))
-		
-	def installadd(self, answer):
-		if answer is True:
-			dest = self.fileN
-			mydir = getcwd()
-			chdir("/")
-			cmd = "opkg update"
-			if fileExists("/var/volatile/tmp/official-all"):
-				cmd = "echo -e 'Testing: %s '" % (dest)
-			cmd0 = "opkg install --noaction %s > /tmp/package.info" % (dest)
-			cmd1 = "opkg install --force-overwrite " + dest
-			cmd2 = "rm -f " + dest
-			self.session.open(Console, title=_("Ipk Package Installation"), cmdlist=[cmd, cmd0, cmd1, cmd2, "sleep 5"], finishedCallback = self.installipkDone)
-			chdir(mydir)	
-	
-	def installipkDone(self):
-		if fileExists("/tmp/package.info"):
-			f = open("/tmp/package.info",'r')
-			for line in f.readlines():
-				if line.find('Installing') != -1:
-					parts = line.strip().split()
-					pname = "/usr/uninstall/" + parts[1] + ".del"
-					out = open(pname,'w')
-					line = "#!/bin/sh\n\nopkg remove --force-depends --force-remove %s\nrm -f %s\n\nexit 0\n" % (parts[1], pname)
-					out.write(line)
-					out.close()
-					cmd = "chmod 0755 " + pname
-					rc = system(cmd)
-			f.close()
-			rc = system("rm -f /tmp/package.info")
-		mybox = self.session.openWithCallback(self.hrestEn, MessageBox, _("Gui will be now restarted to complete package installation.\nPress ok to continue"), MessageBox.TYPE_INFO)
-		mybox.setTitle(_("Info"))
-				
-
-	def hrestEn(self, answer):
-		self.eDVBDB = eDVBDB.getInstance()
-		self.eDVBDB.reloadServicelist()
-		self.eDVBDB.reloadBouquets()
-		self.session.open(TryQuitMainloop, 3)
 
 
 class Nab_downCat(Screen):
