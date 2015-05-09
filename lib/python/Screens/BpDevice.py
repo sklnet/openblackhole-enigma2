@@ -1,9 +1,8 @@
-# Black Pole Devices Manager & Swap File coded by meo.
-
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Standby import TryQuitMainloop
+from Screens.Console import Console
 from Components.ActionMap import ActionMap
 from Components.Sources.List import List
 from Components.Label import Label
