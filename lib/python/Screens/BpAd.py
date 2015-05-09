@@ -59,7 +59,7 @@ class DeliteAddons(Screen):
 	def updateList(self):
 		self.list = [ ]
 		mypath = resolveFilename(SCOPE_CURRENT_SKIN, "")
-		if mypath == "/usr/share/enigma2/":
+		if mypath == "/usr/share/enigma2/" or mypath == "/usr/share/enigma2/./":
 			mypath = "/usr/share/enigma2/skin_default/"
 		
 		mypixmap = mypath + "icons/addons_manager.png"
@@ -232,7 +232,7 @@ class Nab_downArea(Screen):
 		
 		self.list = [ ]
 		mypath = resolveFilename(SCOPE_CURRENT_SKIN, "")
-		if mypath == "/usr/share/enigma2/":
+		if mypath == "/usr/share/enigma2/" or mypath == "/usr/share/enigma2/./":
 			mypath = "/usr/share/enigma2/skin_default/"
 		
 		

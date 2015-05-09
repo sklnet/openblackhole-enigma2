@@ -106,7 +106,7 @@ class DeliteSettings(Screen):
 	def updateList(self):
 		self.list = [ ]
 		mypath = resolveFilename(SCOPE_CURRENT_SKIN, "")
-		if mypath == "/usr/share/enigma2/":
+		if mypath == "/usr/share/enigma2/" or mypath == "/usr/share/enigma2/./":
 			mypath = "/usr/share/enigma2/skin_default/"
 		
 		mypixmap = mypath + "icons/infopanel_space.png"

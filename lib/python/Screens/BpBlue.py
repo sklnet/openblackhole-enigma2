@@ -5,6 +5,7 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.MenuList import MenuList
 from Components.Sources.List import List
+from Components.Pixmap import MultiPixmap
 from Components.About import about
 from Tools.Directories import fileExists
 from ServiceReference import ServiceReference
@@ -139,13 +140,11 @@ class DeliteBluePanel(Screen):
 		system (cmd)
 		cmd = "STOP_CAMD," + self.defaultcam
 		self.sendtoBh_sock(cmd)
-		self.session.openWithCallback(self.keyOk2, startstopCam, self.defCamname, "stopping")
 		
-	def keyOk2(self):
 		cmd = "NEW_CAMD," + self.newcam
 		self.sendtoBh_sock(cmd)
 		oldcam = self.camnames[self.sel]
-		self.session.openWithCallback(self.myclose, startstopCam, self.sel, "starting")
+		self.session.openWithCallback(self.myclose, Nab_DoStartCam, self.sel)
 		
 		
 	def sendtoBh_sock(self, data):
@@ -172,32 +171,53 @@ class DeliteBluePanel(Screen):
 		self.close()
 	
 
-class startstopCam(Screen):
+class Nab_DoStartCam(Screen):
 	skin = """
-	<screen position="center,center" size="360,200" title="Black Hole" flags="wfNoBorder">
-		<widget name="lab1" position="10,10" halign="center" size="340,180" zPosition="1" font="Regular;20" valign="center" transparent="1" />
+	<screen position="390,100" size="484,250" title="Black Hole" flags="wfNoBorder">
+		<widget name="connect" position="0,0" size="484,250" zPosition="-1" pixmaps="skin_default/startcam_1.png,skin_default/startcam_2.png,skin_default/startcam_3.png,skin_default/startcam_4.png" transparent="1" />
+		<widget name="lab1" position="10,180" halign="center" size="460,60" zPosition="1" font="Regular;20" valign="top" transparent="1" />
 	</screen>"""
 	
-	def __init__(self, session, name, what):
+	def __init__(self, session, title):
 		Screen.__init__(self, session)
 		
-		msg = _("Please wait while ") + "%s\n %s ..." % (what, name)
+		msg = _("Please wait while starting\n") + title + "..."
+		self["connect"] = MultiPixmap()
 		self["lab1"] = Label(msg)
-		self.delay = 800
-		if what == "starting":
-			self.delay= 3000
-		
+
 		self.activityTimer = eTimer()
-		self.activityTimer.timeout.get().append(self.end)
+		self.activityTimer.timeout.get().append(self.updatepix)
 		self.onShow.append(self.startShow)
+		self.onClose.append(self.delTimer)
 		
 	def startShow(self):
-		self.activityTimer.start(self.delay)
+		self.curpix = 0
+		self.count = 0
+		self["connect"].setPixmapNum(0)
+		self.activityTimer.start(10)
 
-	def end(self):
+	def updatepix(self):
 		self.activityTimer.stop()
+		if self.curpix > 2:
+			self.curpix = 0
+		#if self.count == 0:
+			
+		if self.count > 7:
+			self.curpix = 3
+		self["connect"].setPixmapNum(self.curpix)
+		if self.count == 20:
+			self.hide()
+			
+			#ref = self.session.nav.getCurrentlyPlayingServiceReference()
+			#self.session.nav.playService(ref)
+			self.close()
+		
+		self.activityTimer.start(140)
+		self.curpix += 1
+		self.count += 1
+		
+	def delTimer(self):
 		del self.activityTimer
-		self.close()
 
 class BhsysInfo(Screen):
 	skin = """
