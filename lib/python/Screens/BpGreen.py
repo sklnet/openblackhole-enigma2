@@ -16,6 +16,30 @@ from enigma import eDVBDB
 config.misc.fast_plugin_button = ConfigText(default="")
 
 class DeliteGreenPanel(Screen):
+	skin = """
+	<screen name="DeliteGreenPanel" position="center,center" size="1000,720" title="Black Hole Green Panel" flags="wfNoBorder">
+		<eLabel text="Black Hole Green Panel" position="80,30" size="800,38" font="Regular;34" halign="left" foregroundColor="#004c74" backgroundColor="transpBlack" transparent="1"/>
+		<widget source="list" render="Listbox" position="80,105" zPosition="1" size="840,500" scrollbarMode="showOnDemand"  transparent="1">
+             <convert type="TemplatedMultiContent">
+                 {"template": [
+                 MultiContentEntryText(pos = (125, 0), size = (650, 24), font=0, text = 0),
+                 MultiContentEntryText(pos = (125, 24), size = (650, 24), font=1, text = 1),
+                 MultiContentEntryPixmapAlphaTest(pos = (6, 5), size = (100, 40), png = 2),
+                 ],
+                 "fonts": [gFont("Regular", 24),gFont("Regular", 20)],
+                 "itemHeight": 50
+                 }
+             </convert>
+             </widget>
+		<ePixmap position="88,650" size="140,40" pixmap="skin_default/buttons/red.png" alphatest="on" zPosition="1" />
+        <ePixmap position="316,650" size="140,40" pixmap="skin_default/buttons/green.png" alphatest="on" zPosition="1" />
+        <ePixmap position="544,650" size="140,40" pixmap="skin_default/buttons/yellow.png" alphatest="on" zPosition="1" />
+        <ePixmap position="772,650" size="140,40" pixmap="skin_default/buttons/blue.png" alphatest="on" zPosition="1" />
+		<widget name="key_red" position="88,650" zPosition="2" size="140,40" font="Regular;24" halign="center" valign="center" backgroundColor="red" transparent="1" />
+		<widget name="key_green" position="316,650" zPosition="2" size="140,40" font="Regular;24" halign="center" valign="center" backgroundColor="green" transparent="1" />
+		<widget name="key_yellow" position="544,650" zPosition="2" size="140,40" font="Regular;24" halign="center" valign="center" backgroundColor="yellow" transparent="1" />
+		<widget name="key_blue" position="772,650" zPosition="2" size="140,40" font="Regular;24" halign="center" valign="center" backgroundColor="blue" transparent="1" />
+	</screen>"""
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		
