@@ -222,6 +222,8 @@ lib/python/Plugins/SystemPlugins/FirmwareUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FirmwareUpgrade/meta/Makefile
 lib/python/Plugins/SystemPlugins/RemoteControlCode/Makefile
 lib/python/Plugins/SystemPlugins/RemoteControlCode/meta/Makefile
+lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
+lib/python/Plugins/SystemPlugins/AnimationSetup/meta/Makefile
 lib/python/Plugins/SystemPlugins/Hotplug/Makefile
 lib/python/Plugins/SystemPlugins/Hotplug/meta/Makefile
 lib/python/Plugins/SystemPlugins/Makefile
