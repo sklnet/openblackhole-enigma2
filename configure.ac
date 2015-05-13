@@ -220,6 +220,8 @@ lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/meta/Makefile
 lib/python/Plugins/SystemPlugins/FirmwareUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FirmwareUpgrade/meta/Makefile
+lib/python/Plugins/SystemPlugins/Blindscan/Makefile
+lib/python/Plugins/SystemPlugins/Blindscan/meta/Makefile
 lib/python/Plugins/SystemPlugins/RemoteControlCode/Makefile
 lib/python/Plugins/SystemPlugins/RemoteControlCode/meta/Makefile
 lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
