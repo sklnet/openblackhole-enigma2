@@ -399,7 +399,17 @@ class AttributeParser:
 
 def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1))):
 	# Someone still using applySingleAttribute?
-	AttributeParser(guiObject, desktop, scale).applyOne(attrib, value)
+	if attrib == 'animationMode':
+			guiObject.setAnimationMode(
+				{ "disable": 0x00,
+					"off": 0x00,
+					"offshow": 0x10,
+					"offhide": 0x01,
+					"onshow": 0x01,
+					"onhide": 0x10,
+				}[value])
+	else:
+		AttributeParser(guiObject, desktop, scale).applyOne(attrib, value)
 
 def applyAllAttributes(guiObject, desktop, attributes, scale):
 	AttributeParser(guiObject, desktop, scale).applyAll(attributes)
