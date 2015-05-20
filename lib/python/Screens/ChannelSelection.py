@@ -1847,7 +1847,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		self.new_service_played = False
 		self.dopipzap = False
 		vumachine = file("/proc/stb/info/vumodel").read().strip()
-		if self.vumachine == "ultimo" or self.vumachine == "zero":
+		if vumachine == "ultimo" or vumachine == "zero":
 			self.onExecBegin.append(self.asciiOff)
 		else:
 			self.onExecBegin.append(self.asciiOn)

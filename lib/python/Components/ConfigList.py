@@ -23,7 +23,7 @@ class ConfigList(HTMLComponent, GUIComponent, object):
 	def execBegin(self):
 		rcinput = eRCInput.getInstance()
 		vumachine = file("/proc/stb/info/vumodel").read().strip()
-		if self.vumachine == "ultimo" or self.vumachine == "zero":
+		if vumachine == "ultimo" or vumachine == "zero":
 			rcinput.setKeyboardMode(rcinput.kmNone)
 		else:
 			rcinput.setKeyboardMode(rcinput.kmAscii)

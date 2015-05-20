@@ -45,7 +45,7 @@ class InputBox(Screen):
 
 		if self["input"].type == Input.TEXT:
 			vumachine = file("/proc/stb/info/vumodel").read().strip()
-			if self.vumachine == "ultimo" or self.vumachine == "zero":
+			if vumachine == "ultimo" or vumachine == "zero":
 				self.onExecBegin.append(self.setKeyboardModeNone)
 			else:
 				self.onExecBegin.append(self.setKeyboardModeAscii)

@@ -673,7 +673,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				#iPlayableService.evSOF: self.__evSOF,
 			})
 		vumachine = file("/proc/stb/info/vumodel").read().strip()
-		if self.vumachine == "ultimo" or self.vumachine == "zero":
+		if vumachine == "ultimo" or vumachine == "zero":
 			self.onExecBegin.append(self.asciiOff)
 		else:
 			self.onExecBegin.append(self.asciiOn)
