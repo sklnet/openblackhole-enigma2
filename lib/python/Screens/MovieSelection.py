@@ -672,7 +672,11 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				iPlayableService.evEOF: self.__evEOF,
 				#iPlayableService.evSOF: self.__evSOF,
 			})
-		self.onExecBegin.append(self.asciiOn)
+		vumachine = file("/proc/stb/info/vumodel").read().strip()
+		if self.vumachine == "ultimo" or self.vumachine == "zero":
+			self.onExecBegin.append(self.asciiOff)
+		else:
+			self.onExecBegin.append(self.asciiOn)
 		config.misc.standbyCounter.addNotifier(self.standbyCountChanged, initial_call=False)
 
 	def isProtected(self):

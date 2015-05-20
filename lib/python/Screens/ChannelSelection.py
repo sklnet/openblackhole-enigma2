@@ -1846,7 +1846,11 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		config.usage.multibouquet.addNotifier(self.multibouquet_config_changed)
 		self.new_service_played = False
 		self.dopipzap = False
-		self.onExecBegin.append(self.asciiOn)
+		vumachine = file("/proc/stb/info/vumodel").read().strip()
+		if self.vumachine == "ultimo" or self.vumachine == "zero":
+			self.onExecBegin.append(self.asciiOff)
+		else:
+			self.onExecBegin.append(self.asciiOn)
 		self.mainScreenMode = None
 		self.mainScreenRoot = None
 
