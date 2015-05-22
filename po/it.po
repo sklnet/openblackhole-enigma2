@@ -5405,8 +5405,8 @@ msgstr "Ricerca in corso su %s..."
 #, python-format
 msgid "Scanning - %d%% completed"
 msgid_plural "Scanning - %d%% completed"
-msgstr[0] "Suche - %d%% beendet"
-msgstr[1] "Suche - %d%% beendet"
+msgstr[0] "Ricerca in corso - %d%% completata"
+msgstr[1] "Ricerca in corso - %d%% completata"
 
 #, python-format
 msgid "Scanning completed, %d channel found"
@@ -6576,7 +6576,7 @@ msgstr ""
 msgid ""
 "Thank you for using the wizard. Your receiver is now ready for use.\n"
 "Press OK to start using your receiver."
-msgstr "Il ricevitore è ora pronto per essere utilizzato./nOK >> continuare."
+msgstr "Il ricevitore è ora pronto per essere utilizzato.\nOK >> continuare."
 
 msgid "The DVD standard doesn't support H.264 (HDTV) video streams. Do you want to create a special format data DVD (which will not play in stand-alone DVD players) instead?"
 msgstr "Lo standard DVD non supporta stream video H.264 (HDTV). Creare un DVD con formato dati speciale? (non sarà leggibile da lettori DVD standard)"
