@@ -166,8 +166,8 @@ class CommitInfo(Screen):
 
 		self.project = 0
 		self.projects = [
-			("enigma2", "Enigma2"),
-			("openpli-oe-core", "Openpli Oe Core"),
+			("openblackhole-enigma2", "Enigma2"),
+			("openblackhole-oe-core", "Openpli Oe Core"),
 			("enigma2-plugins", "Enigma2 Plugins"),
 			("aio-grab", "Aio Grab"),
 			("gst-plugin-dvbmediasink", "Gst Plugin Dvbmediasink"),
@@ -184,13 +184,21 @@ class CommitInfo(Screen):
 
 	def readCommitLogs(self):
 		url = 'http://sourceforge.net/p/openpli/%s/feed' % self.projects[self.project][0]
+		urlbh = 'http://git.vuplus-community.net/?p=openblackhole/%s.git;a=rss' % self.projects[self.project][0]
 		commitlog = ""
 		from urllib2 import urlopen
 		try:
+			response =  urlopen(urlbh, timeout=5)
+			commitlog += 80 * '-' + '\n'
+			commitlog += urlbh.split('/')[-2].split('=')[-1] + '\n'
+			commitlog += 80 * '-' + '\n'
+		except:
+			response =  urlopen(url, timeout=5)
 			commitlog += 80 * '-' + '\n'
 			commitlog += url.split('/')[-2] + '\n'
 			commitlog += 80 * '-' + '\n'
-			for x in  urlopen(url, timeout=5).read().split('<title>')[2:]:
+		try:
+			for x in response.read().split('<title>')[2:]:
 				for y in x.split("><"):
 					if '</title' in y:
 						title = y[:-7]
