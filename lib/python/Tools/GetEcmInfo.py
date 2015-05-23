@@ -2,7 +2,7 @@ import os
 import time
 
 ECM_INFO = '/tmp/ecm.info'
-EMPTY_ECM_INFO = '','0','0','0'
+EMPTY_ECM_INFO = 'Free To Air','0','0','0'
 
 old_ecm_time = time.time()
 info = {}
