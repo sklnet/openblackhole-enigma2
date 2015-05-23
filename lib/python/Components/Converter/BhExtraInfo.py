@@ -103,7 +103,7 @@ class BhExtraInfo(Poll, Converter, object):
 		return res
 
 	def createCryptoSpecial(self, info):
-		caid_name = "FTA"
+		caid_name = "Free To Air"
 		try:
 			for caid_entry in self.caid_data:
 				if int(self.current_caid, 16) >= int(caid_entry[0], 16) and int(self.current_caid, 16) <= int(caid_entry[1], 16):
