@@ -2,12 +2,15 @@
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
+from Screens.InputBox import InputBox
 from Screens.Console import Console
+from Screens.Standby import TryQuitMainloop
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Pixmap import Pixmap
 from Tools.Directories import fileExists
-from os import system, listdir
+from os import system, listdir, remove as os_remove
 
 
 class Bp_UsbFormat(Screen):
@@ -74,6 +77,14 @@ class Bp_UsbFormat(Screen):
 		else:
 			msg = self.get_Deviceinfo(self.device)
 			self["lab1"].setText(msg)
+			cmd = "umount /dev/" + self.device
+			system(cmd)
+			cmd2 = cmd + "1"
+			system(cmd2)
+			cmd2 = cmd + "2"
+			system(cmd2)
+			cmd2 = cmd + "3"
+			system(cmd2)
 			self.step = 4
 			
 	def stepFour(self):
