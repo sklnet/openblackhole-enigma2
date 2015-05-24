@@ -49,7 +49,7 @@ class InputBox(Screen):
 				if vumachine == "ultimo" or vumachine == "zero":
 					self.onExecBegin.append(self.setKeyboardModeNone)
 				else:
-				self.onExecBegin.append(self.setKeyboardModeAscii)
+					self.onExecBegin.append(self.setKeyboardModeAscii)
 			except:
 				self.onExecBegin.append(self.setKeyboardModeAscii)
 		else:
