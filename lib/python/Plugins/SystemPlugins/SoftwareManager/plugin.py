@@ -1597,10 +1597,13 @@ class PacketManager(Screen, NumericalTextInput):
 		self.onShown.append(self.setWindowTitle)
 		self.onLayoutFinish.append(self.rebuildList)
 
-		vumachine = file("/proc/stb/info/vumodel").read().strip()
-		if vumachine == "ultimo" or vumachine == "zero":
-			rcinput.setKeyboardMode(rcinput.kmNone)
-		else:
+		try:
+			vumachine = file("/proc/stb/info/vumodel").read().strip()
+			if vumachine == "ultimo" or vumachine == "zero":
+				rcinput.setKeyboardMode(rcinput.kmNone)
+			else:
+				rcinput.setKeyboardMode(rcinput.kmAscii)
+		except:
 			rcinput.setKeyboardMode(rcinput.kmAscii)
 
 	def keyNumberGlobal(self, val):

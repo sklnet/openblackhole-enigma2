@@ -672,10 +672,13 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				iPlayableService.evEOF: self.__evEOF,
 				#iPlayableService.evSOF: self.__evSOF,
 			})
-		vumachine = file("/proc/stb/info/vumodel").read().strip()
-		if vumachine == "ultimo" or vumachine == "zero":
-			self.onExecBegin.append(self.asciiOff)
-		else:
+		try:
+			vumachine = file("/proc/stb/info/vumodel").read().strip()
+			if vumachine == "ultimo" or vumachine == "zero":
+				self.onExecBegin.append(self.asciiOff)
+			else:
+				self.onExecBegin.append(self.asciiOn)
+		except:
 			self.onExecBegin.append(self.asciiOn)
 		config.misc.standbyCounter.addNotifier(self.standbyCountChanged, initial_call=False)
 
