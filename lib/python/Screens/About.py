@@ -12,6 +12,7 @@ from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 
 from Tools.StbHardware import getFPVersion
+from Tools.Directories import fileExists
 from enigma import eTimer, eLabel
 
 from Components.HTMLComponent import HTMLComponent
@@ -42,7 +43,10 @@ class About(Screen):
 		self["ImageVersion"] = StaticText(ImageVersion)
 		AboutText += ImageVersion + "\n"
 
-		AboutText += _("DVB drivers: ") + about.getDriverInstalledDate() + "\n"
+		if fileExists("/proc/stb/info/vumodel"):
+			AboutText += _("DVB drivers: ") + about.getDriverVuInstalledDate() + "\n"
+		else:
+			AboutText += _("DVB drivers: ") + about.getDriverInstalledDate() + "\n"
 
 		AboutText += _("Python version: ") + about.getPythonVersionString() + "\n"
 
