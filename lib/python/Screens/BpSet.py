@@ -14,6 +14,7 @@ from Tools.Directories import fileExists, pathExists, resolveFilename, SCOPE_CUR
 from os import system, remove as os_remove, rename as os_rename, popen, getcwd, chdir
 from Screens.Setup import Setup
 from Plugins.SystemPlugins.NetworkBrowser.NetworkBrowser import NetworkBrowser
+from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupScreen
 
 
 
@@ -915,3 +916,30 @@ class DeliteVpnLog(Screen):
 			f.close()
 			os_remove("/etc/openvpn/tmp.log")
 		self["infotext"].setText(strview)
+		
+
+class BhBackupSettings(Screen):
+	skin = """
+	<screen position="center,center,100" size="800,300" title="Back Up your settings">
+		<widget name="infotext" position="10,10" size="780,240" font="Regular;26" />
+		<ePixmap pixmap="skin_default/buttons/red.png" position="330,250" size="140,40" alphatest="on" />
+		<widget name="key_red" position="330,250" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
+	</screen>"""
+	
+	def __init__(self, session):
+		Screen.__init__(self, session)
+		
+		msg = _("Backup your Settings.\n\nYou can setup backup location and backup files in Plugins -> Softare managment -> advanced.")
+		
+		self["infotext"] = Label(msg)
+		self["key_red"] = Label(_("Backup"))
+		self["actions"] = ActionMap(["WizardActions", "ColorActions"],
+		{
+			"ok": self.doIt,
+			"red": self.doIt,
+			"back": self.close
+
+		})
+	def doIt(self):
+		self.session.open(BackupScreen, runBackup = True)
+		self["infotext"].setText(_("Backup Complete"))

@@ -69,6 +69,7 @@ self.session.openWithCallback(msgClosed, FactoryReset)
 		<item level="0" text="Black Hole App's" entryID="blackhole_extra"><screen module="BpSet" screen="DeliteSettings" /></item>
 		<menu level="0" text="Backup Menu" entryID="backup_screen">
 			<id val="bhbackup" />
+			<item level="0" text="Settings Backup" entryID="blackhole_extra"><screen module="BpSet" screen="BhBackupSettings" /></item>
 		</menu>
 		<item level="1" text="Plugins" entryID="plugin_selection"><screen module="PluginBrowser" screen="PluginBrowser"/></item>
 		<item level="0" text="Timer" entryID="timer_edit"><screen module="TimerEdit" screen="TimerEditList"/></item>
