@@ -87,7 +87,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		try:
 			# TODO: Use Twisted's URL fetcher, urlopen is evil. And it can
 			# run in parallel to the package update.
-			status = urlopen("http://openpli.org/status").read().split('!', 1)
+			status = urlopen("http://openpli.org/status/").read().split('!', 1)
 			if getBoxType() in status[0].split(','):
 				message = len(status) > 1 and status[1] or _("The current beta image might not be stable.\nFor more information see %s.") % ("www.openpli.org")
 				picon = MessageBox.TYPE_ERROR
@@ -219,7 +219,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 					choices = []
 				if fileExists("/home/root/ipkgupgrade.log"):
 					choices.append((_("Show latest upgrade log"), "log"))
-#				choices.append((_("Show latest commits on sourceforge"), "commits"))
+#				choices.append((_("Show latest commits"), "commits"))
 #				if not config.usage.show_update_disclaimer.value:
 #					choices.append((_("Show disclaimer"), "disclaimer"))
 				choices.append((_("Cancel"), ""))

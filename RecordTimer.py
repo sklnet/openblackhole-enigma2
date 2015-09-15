@@ -261,7 +261,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				if event_id is None:
 					event_id = -1
 
-			prep_res=self.record_service.prepare(self.Filename + ".ts", self.begin, self.end, event_id, name.replace("\n", ""), description.replace("\n", ""), ' '.join(self.tags), bool(self.descramble), bool(self.record_ecm))
+			prep_res=self.record_service.prepare(self.Filename + self.record_service.getFilenameExtension(), self.begin, self.end, event_id, name.replace("\n", ""), description.replace("\n", ""), ' '.join(self.tags), bool(self.descramble), bool(self.record_ecm))
 			if prep_res:
 				if prep_res == -255:
 					self.log(4, "failed to write meta information")
@@ -324,7 +324,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				# i.e. cable / sat.. then the second recording needs an own extension... when we create the file
 				# here than calculateFilename is happy
 				if not self.justplay:
-					open(self.Filename + ".ts", "w").close()
+					open(self.Filename + self.record_service.getFilenameExtension(), "w").close()
 					# Give the Trashcan a chance to clean up
 					try:
 						Trashcan.instance.cleanIfIdle(self.Filename)
@@ -594,6 +594,10 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				Notifications.AddPopup(text = text, type = MessageBox.TYPE_INFO, timeout = 3)
 		elif event == iRecordableService.evRecordAborted:
 			NavigationInstance.instance.RecordTimer.removeEntry(self)
+		elif event == iRecordableService.evGstRecordEnded:
+			if self.repeated:
+				self.processRepeated(findRunningEvent = False)
+			NavigationInstance.instance.RecordTimer.doActivate(self)
 
 	# we have record_service as property to automatically subscribe to record service events
 	def setRecordService(self, service):
@@ -735,10 +739,11 @@ class RecordTimer(timer.Timer):
 		checkit = True
 		for timer in root.findall("timer"):
 			newTimer = createTimer(timer)
-			if (self.record(newTimer, True, dosave=False) is not None) and (checkit == True):
+			if (self.record(newTimer, ignoreTSC=True, dosave=False) is not None) and checkit:
 				from Tools.Notifications import AddPopup
 				from Screens.MessageBox import MessageBox
-				AddPopup(_("Timer overlap in timers.xml detected!\nPlease recheck it!"), type = MessageBox.TYPE_ERROR, timeout = 0, id = "TimerLoadFailed")
+				timer_text = _("\nTimer '%s' disabled!") % newTimer.name
+				AddPopup(_("Timer overlap in timers.xml detected!\nPlease recheck it!") + timer_text, type = MessageBox.TYPE_ERROR, timeout = 0, id = "TimerLoadFailed")
 				checkit = False # at moment it is enough when the message is displayed one time
 
 	def saveTimer(self):
@@ -881,15 +886,19 @@ class RecordTimer(timer.Timer):
 
 	def record(self, entry, ignoreTSC=False, dosave=True): # wird von loadTimer mit dosave=False aufgerufen
 		timersanitycheck = TimerSanityCheck(self.timer_list,entry)
+		answer = None
 		if not timersanitycheck.check():
-			if ignoreTSC != True:
-				print "timer conflict detected!"
+			if not ignoreTSC:
+				print "[RecordTimer] timer conflict detected!"
 				print timersanitycheck.getSimulTimerList()
 				return timersanitycheck.getSimulTimerList()
 			else:
-				print "ignore timer conflict"
+				print "[RecordTimer] ignore timer conflict..."
+				if not dosave:
+					entry.disabled = True
+					answer = timersanitycheck.getSimulTimerList()
 		elif timersanitycheck.doubleCheck():
-			print "ignore double timer"
+			print "[RecordTimer] ignore double timer..."
 			return None
 		entry.timeChanged()
 		print "[Timer] Record " + str(entry)
@@ -897,7 +906,7 @@ class RecordTimer(timer.Timer):
 		self.addTimerEntry(entry)
 		if dosave:
 			self.saveTimer()
-		return None
+		return answer
 
 	def isInRepeatTimer(self, timer, event):
 		time_match = 0

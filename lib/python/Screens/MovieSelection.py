@@ -237,9 +237,6 @@ def buildMovieLocationList(bookmarks):
 		else:
 			bookmarks.append((p.tabbedDescription(), d))
 		inlist.append(d)
-	for d in last_selected_dest:
-		if d not in inlist:
-			bookmarks.append((d,d))
 
 class MovieBrowserConfiguration(ConfigListScreen,Screen):
 	skin = """
@@ -686,7 +683,13 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		return config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.movie_list.value
 
 	def standbyCountChanged(self, value):
-		self.close(None)
+		path = self.getTitle().split(" /", 1)
+		if path and len(path) > 1:
+			if [x for x in path[1].split("/") if x.startswith(".") and not x.startswith(".Trash")]:
+				moviepath = defaultMoviePath()
+				if moviepath:
+					config.movielist.last_videodir.value = defaultMoviePath()
+					self.close(None)
 
 	def unhideParentalServices(self):
 		if self.protectContextMenu:
@@ -1734,8 +1737,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 	def stopTimer(self, timer):
 		if timer.isRunning():
 			if timer.repeated:
-				timer.enable()
-				timer.processRepeated(findRunningEvent = False)
+				if not timer.disabled:
+					timer.enable()
+				timer.processRepeated(findRunningEvent=False)
 				self.session.nav.RecordTimer.doActivate(timer)
 			else:
 				timer.afterEvent = RecordTimer.AFTEREVENT.NONE
