@@ -250,12 +250,12 @@ class Nab_downArea(Screen):
 		res = (name, png, idx)
 		self.list.append(res)
 		
-#		mypixmap = mypath + "icons/nabskins.png"
-#		png = LoadPixmap(mypixmap)
-#		name = _("Black Hole Image Skins")
-#		idx = 3
-#		res = (name, png, idx)
-#		self.list.append(res)
+		mypixmap = mypath + "icons/nabskins.png"
+		png = LoadPixmap(mypixmap)
+		name = _("Open Black Hole Image Skins")
+		idx = 3
+		res = (name, png, idx)
+		self.list.append(res)
 		
 		mypixmap = mypath + "icons/nabscript.png"
 		png = LoadPixmap(mypixmap)
@@ -312,10 +312,10 @@ class Nab_downArea(Screen):
 			self.title = "Black Hole Addons Plugins"
 		elif  self.sel == 2:
 			self.url = "feeds"
-			self.title = "Black Hole Feeds Plugins"
+			self.title = "Open Black Hole Feeds Plugins"
 		elif  self.sel == 3:
-			self.url = "http://www.vuplus-community.net/bhaddons/index.php?op=outcat&cat=Skins"
-			self.title = "Black Hole Skins"
+			self.url = "http://www.vuplus-community.net/bhaddons/index.php?op=outcat&cat=OpenBlackHole-Skins"
+			self.title = "Open Black Hole Skins"
 		elif  self.sel == 4:
 			self.url = "http://www.vuplus-community.net/bhaddons/index.php?op=outcat&cat=Scripts"
 			self.title = "Black Hole Scripts"
@@ -526,7 +526,7 @@ class Nab_ShowDownFile(Screen):
 		return cleantext
 			
 	def KeyYellowd(self):
-		if (self.tcat != "Skins" and self.tcat != "Logos"):
+		if (self.tcat != "OpenBlackHole-Skins" and self.tcat != "Logos"):
 			nobox = self.session.open(MessageBox, _("Sorry, the preview is available only for Skins and Bootlogo."), MessageBox.TYPE_INFO)
 		else:
 			self.fileP = self.fileN.replace('.tgz', '.jpg')

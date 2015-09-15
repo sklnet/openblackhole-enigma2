@@ -109,7 +109,7 @@ class DeliteDevicesPanel(Screen):
 		
 	def get_Dtype(self, device):
 		pixpath = resolveFilename(SCOPE_CURRENT_SKIN, "")
-		if pixpath == "/usr/share/enigma2/":
+		if pixpath == "/usr/share/enigma2/" or pixpath == "/usr/share/enigma2/./":
 			pixpath = "/usr/share/enigma2/skin_default/"
 		
 		name = "USB"

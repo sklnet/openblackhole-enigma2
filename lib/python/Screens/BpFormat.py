@@ -77,7 +77,6 @@ class Bp_UsbFormat(Screen):
 		else:
 			msg = self.get_Deviceinfo(self.device)
 			self["lab1"].setText(msg)
-			self.do_umount(self.device)
 			self.step = 4
 			
 	def stepFour(self):
@@ -169,6 +168,7 @@ class Bp_UsbFormat(Screen):
 			self.step = 5
 
 	def do_Part(self):
+		self.do_umount()
 		self.canclose = False
 		self["key_green"].hide()
 		
@@ -207,7 +207,7 @@ class Bp_UsbFormat(Screen):
 			self.do_Format()
 		
 	def do_Format(self):
-		self.do_umount(self.device)
+		self.do_umount()
 		os_remove("/tmp/sfdisk.tmp")
 		cmds = ["sleep 1"]
 		device = "/dev/%s1" % (self.device)
@@ -265,12 +265,12 @@ class Bp_UsbFormat(Screen):
 		info = _("Model: ") + vendor + " " + model +  "\n" + _("Size: ") + size + "\n" + _("Device: ") + "/dev/" + device
 		return info
 	
-	def do_umount(self, device):
+	def do_umount(self):
 		f = open("/proc/mounts",'r')
 		for line in f.readlines():
-			if line.find(self.device) != -1:					
+			if line.find("/dev/sd") != -1:					
 				parts = line.split()
-				cmd = "umount " + parts[0]
+				cmd = "umount -l " + parts[0]
 				system(cmd)
 		f.close()
 	

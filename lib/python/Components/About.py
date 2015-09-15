@@ -82,6 +82,15 @@ def getPythonVersionString():
 		return output.split(' ')[1]
 	except:
 		return _("unknown")
+		
+def getDriverVuInstalledDate():
+		try:
+			driver = os.popen("opkg list-installed | grep vuplus-dvb-").read().strip()
+			driver = driver.split("-")
+			#return driver[:4] + "-" + driver[4:6] + "-" + driver[6:]
+			return driver[5]
+		except:
+			return "unknown"
 
 # For modules that do "from About import about"
 about = sys.modules[__name__]

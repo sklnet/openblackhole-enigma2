@@ -14,6 +14,7 @@ from Tools.Directories import fileExists, pathExists, resolveFilename, SCOPE_CUR
 from os import system, remove as os_remove, rename as os_rename, popen, getcwd, chdir
 from Screens.Setup import Setup
 from Plugins.SystemPlugins.NetworkBrowser.NetworkBrowser import NetworkBrowser
+from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupScreen
 
 
 
@@ -768,7 +769,7 @@ class DeliteOpenvpn(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		
-		self["lab1"] = Label(_("Vpn Version: "))
+		self["lab1"] = Label(_(""))
 		self["lab1a"] = Label(_("OpenVPN Panel - by Black Hole Team."))
 		self["lab2"] = Label(_("Startup Module:"))
 		self["labactive"] = Label(_("Inactive"))
@@ -797,25 +798,14 @@ class DeliteOpenvpn(Screen):
 		
 	def activateVpn(self):
 		
-		myline = 'AUTOSTART="all"'
 		mymess = _("OpenVpn Enabled. Autostart activated.")
 		if self.my_vpn_active == True:
-			myline = 'AUTOSTART="none"'
+			system("rm -f /etc/default/openvpn")
 			mymess = _("OpenVpn disabled.")
-			
-		if fileExists("/usr/bin/openvpn_script.sh"):
-			inme = open("/usr/bin/openvpn_script.sh",'r')
-			out = open("/usr/bin/openvpn_script.tmp",'w')
-			for line in inme.readlines():
-				if line.find('AUTOSTART="') != -1:
-					line = myline + '\n'
-				out.write(line)
+		else:
+			out = open("/etc/default/openvpn",'w')
+			out.write("AUTOSTART=all")
 			out.close()
-			inme.close()
-			
-		if fileExists("/usr/bin/openvpn_script.tmp"):
-			os_rename("/usr/bin/openvpn_script.tmp", "/usr/bin/openvpn_script.sh")
-			system("chmod 0755 /usr/bin/openvpn_script.sh")
 		
 		mybox = self.session.open(MessageBox, mymess, MessageBox.TYPE_INFO)
 		mybox.setTitle("Info")
@@ -827,17 +817,17 @@ class DeliteOpenvpn(Screen):
 			mybox = self.session.open(MessageBox, _("You have to Activate OpenVpn before to start"), MessageBox.TYPE_INFO)
 			mybox.setTitle("Info")
 		elif self.my_vpn_active == True and self.my_vpn_run == False:
-			rc = system("/usr/bin/openvpn_script.sh start")
+			rc = system("/etc/init.d/openvpn start")
 			rc = system("ps")
 			self.updateVpn()
 		elif self.my_vpn_active == True and self.my_vpn_run == True:
-			rc = system("/usr/bin/openvpn_script.sh restart")
+			rc = system("/etc/init.d/openvpn restart")
 			rc = system("ps")
 			self.updateVpn()
 			
 	def stopVpnstop(self):
 		if self.my_vpn_run == True:
-			rc = system("/usr/bin/openvpn_script.sh stop")
+			rc = system("/etc/init.d/openvpn stop")
 			rc = system("ps")
 			self.updateVpn()
 			
@@ -855,16 +845,10 @@ class DeliteOpenvpn(Screen):
 		self.my_vpn_run = False
 		
 		
-		if fileExists("/usr/bin/openvpn_script.sh"):
-			f = open("/usr/bin/openvpn_script.sh",'r')
- 			for line in f.readlines():
-				if line.find('AUTOSTART="all"') != -1:
-					self["labactive"].setText(_("Active/Autostart enabled"))
-					self["key_yellow"].setText(_("Deactivate"))
-					self.my_vpn_active = True
-								
-			f.close()
-				
+		if fileExists("/etc/default/openvpn"):
+			self["labactive"].setText(_("Active/Autostart enabled"))
+			self["key_yellow"].setText(_("Deactivate"))
+			self.my_vpn_active = True
 				
 		if fileExists("/tmp/nvpn.tmp"):
 			f = open("/tmp/nvpn.tmp",'r')
@@ -915,3 +899,30 @@ class DeliteVpnLog(Screen):
 			f.close()
 			os_remove("/etc/openvpn/tmp.log")
 		self["infotext"].setText(strview)
+		
+
+class BhBackupSettings(Screen):
+	skin = """
+	<screen position="center,center,100" size="800,300" title="Back Up your settings">
+		<widget name="infotext" position="10,10" size="780,240" font="Regular;26" />
+		<ePixmap pixmap="skin_default/buttons/red.png" position="330,250" size="140,40" alphatest="on" />
+		<widget name="key_red" position="330,250" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
+	</screen>"""
+	
+	def __init__(self, session):
+		Screen.__init__(self, session)
+		
+		msg = _("Backup your Settings.\n\nYou can setup backup location and backup files in Plugins -> Softare managment -> advanced.")
+		
+		self["infotext"] = Label(msg)
+		self["key_red"] = Label(_("Backup"))
+		self["actions"] = ActionMap(["WizardActions", "ColorActions"],
+		{
+			"ok": self.doIt,
+			"red": self.doIt,
+			"back": self.close
+
+		})
+	def doIt(self):
+		self.session.open(BackupScreen, runBackup = True)
+		self["infotext"].setText(_("Backup Complete"))
