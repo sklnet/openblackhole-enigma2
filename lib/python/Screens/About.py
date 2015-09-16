@@ -207,8 +207,7 @@ class CommitInfo(Screen):
 			for c in loads(response.read()):
 				creator = c['commit']['author']['name']
 				title = c['commit']['message']
-				#date = datetime.strptime(c['commit']['committer']['date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%x %X') ##fixme
-				date = "" #empty date for now... avoid green screen
+				date = datetime.strptime(c['commit']['committer']['date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%x %X')
 				commitlog += date + ' ' + creator + '\n' + title + 2 * '\n'
 			commitlog = commitlog.encode('utf-8')
 			self.cachedProjects[self.projects[self.project][1]] = commitlog
