@@ -2,6 +2,7 @@ from Screen import Screen
 from Screens.Setup import getConfigMenuItem, Setup
 from Screens.InputBox import PinInput
 from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.ActionMap import NumberActionMap
 from Components.ConfigList import ConfigListScreen
@@ -31,6 +32,7 @@ class AudioSelection(Screen, ConfigListScreen):
 		self["key_yellow"] = Boolean(True)
 		self["key_blue"] = Boolean(False)
 		self.protectContextMenu = True
+		self.Plugins = []
 		ConfigListScreen.__init__(self, [])
 		self.infobar = infobar or self.session.infobar
 
@@ -157,14 +159,16 @@ class AudioSelection(Screen, ConfigListScreen):
 					def __call__(self, *args, **kwargs):
 						self.fnc(*self.args)
 
-				Plugins = [ (p.name, PluginCaller(self.infobar.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_AUDIOMENU) ]
+				self.Plugins = [ (p.name, PluginCaller(self.infobar.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_AUDIOMENU) ]
 
-				if len(Plugins):
+				if self.Plugins:
 					self["key_blue"].setBoolean(True)
-					conflist.append(getConfigListEntry(Plugins[0][0], ConfigNothing()))
-					self.plugincallfunc = Plugins[0][1]
-				if len(Plugins) > 1:
-					print "plugin(s) installed but not displayed in the dialog box:", Plugins[1:]
+					if len(self.Plugins) > 1:
+						conflist.append(getConfigListEntry(_("Audio plugins"), ConfigNothing()))
+						self.plugincallfunc = [(x[0], x[1]) for x in self.Plugins]
+					else:
+						conflist.append(getConfigListEntry(self.Plugins[0][0], ConfigNothing()))
+						self.plugincallfunc = self.Plugins[0][1]
 
 		elif self.settings.menupage.getValue() == PAGE_SUBTITLES:
 
@@ -285,7 +289,13 @@ class AudioSelection(Screen, ConfigListScreen):
 				ConfigListScreen.keyRight(self)
 			elif self["config"].getCurrentIndex() == 3:
 				if self.settings.menupage.getValue() == PAGE_AUDIO and hasattr(self, "plugincallfunc"):
-					self.plugincallfunc()
+					if len(self.Plugins) > 1:
+						def runPluginAction(choice):
+							if choice:
+								choice[1]()
+						self.session.openWithCallback(runPluginAction, ChoiceBox, title=_("Audio plugins"), list=self.plugincallfunc)
+					else:
+						self.plugincallfunc()
 				elif self.settings.menupage.getValue() == PAGE_SUBTITLES and self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0,0,0,0):
 					self.session.open(QuickSubtitlesConfigMenu, self.infobar)
 		if self.focus == FOCUS_STREAMS and self["streams"].count() and config == False:
@@ -398,9 +408,9 @@ class SubtitleSelection(AudioSelection):
 
 class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 	skin = """
-	<screen position="50,50" size="480,280" title="Subtitle settings" backgroundColor="#7f000000" flags="wfNoBorder">
-		<widget name="config" position="5,5" size="470,250" font="Regular;18" zPosition="1" transparent="1" selectionPixmap="PLi-HD/buttons/sel.png" valign="center" />
-		<widget name="videofps" position="5,255" size="470,20" backgroundColor="secondBG" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="left" foregroundColor="blue"/>
+	<screen position="50,50" size="480,305" title="Subtitle settings" backgroundColor="#7f000000" flags="wfNoBorder">
+		<widget name="config" position="5,5" size="470,275" font="Regular;18" zPosition="1" transparent="1" selectionPixmap="PLi-HD/buttons/sel.png" valign="center" />
+		<widget name="videofps" position="5,280" size="470,20" backgroundColor="secondBG" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="left" foregroundColor="blue"/>
 	</screen>"""
 
 	def __init__(self, session, infobar):
@@ -432,6 +442,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("config.subtitles.subtitle_position"),
 				getConfigMenuItem("config.subtitles.subtitle_rewrap"),
 				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
+				getConfigMenuItem("config.subtitles.showbackground"),
 				getConfigMenuItem("config.subtitles.subtitle_alignment"),
 				getConfigMenuItem("config.subtitles.subtitle_bad_timing_delay"),
 				getConfigMenuItem("config.subtitles.subtitle_noPTSrecordingdelay"),
@@ -447,6 +458,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("config.subtitles.subtitle_alignment"),
 				getConfigMenuItem("config.subtitles.subtitle_rewrap"),
 				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
+				getConfigMenuItem("config.subtitles.showbackground"),
 				getConfigMenuItem("config.subtitles.pango_subtitles_fps"),
 			]
 			self["videofps"].setText(_("Video: %s fps") % (self.getFps().rstrip(".000")))

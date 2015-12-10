@@ -1,3 +1,4 @@
+import os
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.InputBox import InputBox
@@ -20,15 +21,12 @@ from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
 from Tools.LoadPixmap import LoadPixmap
 from Plugins.Plugin import PluginDescriptor
 from enigma import eTimer, ePoint, eSize, RT_HALIGN_LEFT, eListboxPythonMultiContent, gFont
-from os import path as os_path, system as os_system, unlink
-from re import compile as re_compile, search as re_search
-
 
 class NetworkAdapterSelection(Screen,HelpableScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
-
+		self.setTitle(_("Select a network adapter"))
 		self.wlan_errortext = _("No working wireless network adapter found.\nPlease verify that you have attached a compatible WLAN device and your network is configured correctly.")
 		self.lan_errortext = _("No working local network adapter found.\nPlease verify that you have attached a network cable and your network is configured correctly.")
 		self.oktext = _("Press OK on your remote control to continue.")
@@ -126,10 +124,10 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 			self["introduction"].setText(self.edittext)
 			self["DefaultInterfaceAction"].setEnabled(False)
 
-		if num_configured_if < 2 and os_path.exists("/etc/default_gw"):
-			unlink("/etc/default_gw")
+		if num_configured_if < 2 and os.path.exists("/etc/default_gw"):
+			os.unlink("/etc/default_gw")
 
-		if os_path.exists("/etc/default_gw"):
+		if os.path.exists("/etc/default_gw"):
 			fp = file('/etc/default_gw', 'r')
 			result = fp.read()
 			fp.close()
@@ -146,7 +144,7 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 				active_int = False
 			self.list.append(self.buildInterfaceList(x[1],_(x[0]),default_int,active_int ))
 
-		if os_path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
+		if os.path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
 			self["key_blue"].setText(_("Network wizard"))
 		self["list"].setList(self.list)
 
@@ -155,7 +153,7 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 		num_if = len(self.list)
 		old_default_gw = None
 		num_configured_if = len(iNetwork.getConfiguredAdapters())
-		if os_path.exists("/etc/default_gw"):
+		if os.path.exists("/etc/default_gw"):
 			fp = open('/etc/default_gw', 'r')
 			old_default_gw = fp.read()
 			fp.close()
@@ -165,7 +163,7 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 			fp.close()
 			self.restartLan()
 		elif old_default_gw and num_configured_if < 2:
-			unlink("/etc/default_gw")
+			os.unlink("/etc/default_gw")
 			self.restartLan()
 
 	def okbuttonClick(self):
@@ -202,7 +200,7 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 			self.session.open(MessageBox, _("Finished configuring your network"), type = MessageBox.TYPE_INFO, timeout = 10, default = False)
 
 	def openNetworkWizard(self):
-		if os_path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
+		if os.path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
 			try:
 				from Plugins.SystemPlugins.NetworkWizard.NetworkWizard import NetworkWizard
 			except ImportError:
@@ -217,6 +215,7 @@ class NameserverSetup(Screen, ConfigListScreen, HelpableScreen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
+		self.setTitle(_("Configure nameservers"))
 		self.backupNameserverList = iNetwork.getNameserverList()[:]
 		print "backup-list:", self.backupNameserverList
 
@@ -363,6 +362,7 @@ class AdapterSetup(Screen, ConfigListScreen, HelpableScreen):
 		self["HelpWindow"].hide()
 
 	def layoutFinished(self):
+		self.setTitle(_("Network setup"))
 		self["DNS1"].setText(self.primaryDNS.getText())
 		self["DNS2"].setText(self.secondaryDNS.getText())
 		if self.ipConfigEntry.getText() is not None:
@@ -374,7 +374,7 @@ class AdapterSetup(Screen, ConfigListScreen, HelpableScreen):
 			self["IP"].setText(_("N/A"))
 		if self.netmaskConfigEntry.getText() is not None:
 			if self.netmaskConfigEntry.getText() == "0.0.0.0":
-					self["Mask"].setText(_("N/A"))
+				self["Mask"].setText(_("N/A"))
 			else:
 				self["Mask"].setText(self.netmaskConfigEntry.getText())
 		else:
@@ -790,6 +790,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 		self.loadDescription()
 
 	def layoutFinished(self):
+		self.setTitle(_("Network configuration"))
 		idx = 0
 		self["menulist"].moveToIndex(idx)
 		self.loadDescription()
@@ -862,7 +863,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 					self.extendedSetup = ('extendedSetup',menuEntryDescription, self.extended)
 					menu.append((menuEntryName,self.extendedSetup))
 
-		if os_path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
+		if os.path.exists(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/NetworkWizard/networkwizard.xml")):
 			menu.append((_("Network wizard"), "openwizard"))
 
 		return menu

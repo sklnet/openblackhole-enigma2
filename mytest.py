@@ -50,6 +50,10 @@ config.misc.startCounter = ConfigInteger(default=0) # number of e2 starts...
 config.misc.standbyCounter = NoSave(ConfigInteger(default=0)) # number of standby
 config.misc.DeepStandby = NoSave(ConfigYesNo(default=False)) # detect deepstandby
 config.misc.RestartUI = ConfigYesNo(default=False) # detect user interface restart
+config.misc.prev_wakeup_time = ConfigInteger(default=0)
+#config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
+config.misc.prev_wakeup_time_type = ConfigInteger(default=0)
+# 0 = RecordTimer, 1 = ZapTimer, 2 = Plugins, 3 = WakeupTimer
 config.misc.epgcache_filename = ConfigText(default = "/hdd/epg.dat")
 
 def setEPGCachePath(configElement):
@@ -220,7 +224,7 @@ class Session:
 		self.current_dialog.restoreKeyboardMode()
 		self.current_dialog.hide()
 
-		if last:
+		if last and self.summary is not None:
 			self.current_dialog.removeSummary(self.summary)
 			self.popSummary()
 
@@ -232,12 +236,13 @@ class Session:
 		screen.doClose()
 
 	def instantiateSummaryDialog(self, screen, **kwargs):
-		self.pushSummary()
-		summary = screen.createSummary() or SimpleSummary
-		arguments = (screen,)
-		self.summary = self.doInstantiateDialog(summary, arguments, kwargs, self.summary_desktop)
-		self.summary.show()
-		screen.addSummary(self.summary)
+		if self.summary_desktop is not None:
+			self.pushSummary()
+			summary = screen.createSummary() or SimpleSummary
+			arguments = (screen,)
+			self.summary = self.doInstantiateDialog(summary, arguments, kwargs, self.summary_desktop)
+			self.summary.show()
+			screen.addSummary(self.summary)
 
 	def doInstantiateDialog(self, screen, arguments, kwargs, desktop):
 		# create dialog
@@ -308,8 +313,8 @@ class Session:
 	def pushSummary(self):
 		if self.summary is not None:
 			self.summary.hide()
-		self.summary_stack.append(self.summary)
-		self.summary = None
+			self.summary_stack.append(self.summary)
+			self.summary = None
 
 	def popSummary(self):
 		if self.summary is not None:
@@ -477,12 +482,14 @@ def runScreenTest():
 	profile("wakeup")
 	from time import time, strftime, localtime
 	from Tools.StbHardware import setFPWakeuptime, getFPWakeuptime, setRTCtime
+	from Screens.SleepTimerEdit import isNextWakeupTime
 	#get currentTime
 	nowTime = time()
 	wakeupList = [
 		x for x in ((session.nav.RecordTimer.getNextRecordingTime(), 0),
 					(session.nav.RecordTimer.getNextZapTime(isWakeup=True), 1),
-					(plugins.getNextWakeupTime(), 2))
+					(plugins.getNextWakeupTime(), 2),
+					(isNextWakeupTime(), 3))
 		if x[0] != -1
 	]
 	wakeupList.sort()
@@ -498,6 +505,12 @@ def runScreenTest():
 			setRTCtime(nowTime)
 		print "set wakeup time to", strftime("%Y/%m/%d %H:%M", localtime(wptime))
 		setFPWakeuptime(wptime)
+		config.misc.prev_wakeup_time.value = int(startTime[0])
+		config.misc.prev_wakeup_time_type.value = startTime[1]
+		config.misc.prev_wakeup_time_type.save()
+	else:
+		config.misc.prev_wakeup_time.value = 0
+	config.misc.prev_wakeup_time.save()
 
 	profile("stopService")
 	session.nav.stopService()
