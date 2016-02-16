@@ -47,7 +47,7 @@ enigma2_LDADD = \
 	@ALSA_LIBS@ \
 	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
 
-if ENABLE_LIBEPLAYER3
+if HAVE_LIBEPLAYER3
 enigma2_LDADD += \
        -leplayer3
 endif

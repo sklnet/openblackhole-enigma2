@@ -16,7 +16,7 @@ service_libenigma_service_a_SOURCES = \
 	service/servicedvbstream.cpp \
 	service/servicehdmi.cpp
 
-if ENABLE_LIBEPLAYER3
+if HAVE_LIBEPLAYER3
 service_libenigma_service_a_SOURCES += \
        service/serviceeplayer3.cpp
 endif
@@ -36,7 +36,7 @@ serviceinclude_HEADERS = \
 	service/servicedvbstream.h \
 	service/servicehdmi.h
 
-if ENABLE_LIBEPLAYER3
+if HAVE_LIBEPLAYER3
 serviceinclude_HEADERS += \
        service/serviceeplayer3.h
 endif
