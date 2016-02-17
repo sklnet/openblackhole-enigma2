@@ -188,9 +188,11 @@ class VideoHardware:
 		except IOError:
 			print "[VideoHardware] writing initial videomode to /etc/videomode failed."
 
-		#call setResolution() with -1,-1 to read the new scrren dimesions without changing the framebuffer resolution
-		from enigma import gMainDC
-		gMainDC.getInstance().setResolution(-1, -1)
+		if HardwareInfo().get_device_model().startswith("spark")
+			#call setResolution() with -1,-1 to read the new scrren dimesions without changing the framebuffer resolution
+			from enigma import gMainDC
+			gMainDC.getInstance().setResolution(-1, -1)
+
 		self.updateAspect(None)
 
 	def saveMode(self, port, mode, rate):
